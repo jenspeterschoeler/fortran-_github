@@ -1,0 +1,93 @@
+/TITLE, ANSYS
+! Created by: JP and DRE
+
+/clear,nostart  
+
+/AUX15    
+IOPTN,IGES,SMOOTH   
+IOPTN,MERGE,YES 
+IOPTN,SOLID,YES 
+IOPTN,SMALL,YES 
+IOPTN,GTOLER, DEFA  
+IGESIN,'Heat_sink','IGS','Desktop\' 
+
+! -------------------------------!
+! Intialise parameters		 !
+! -------------------------------!
+
+/PREP7
+eSIZE = 0.2
+fluid_temp = 35
+fluid_conv = 15
+fluxload = 1000
+
+! -------------------------------!
+! Element type			 !
+! -------------------------------!
+ET,	1,	PLANE222
+! Setting thermal structural analysis in keyopt
+KEYOPT,	1,	1,	11
+
+
+! -------------------------------!
+! Defining material properties	 !
+! -------------------------------!
+
+! Aluminium
+MP,	EX,  	1,	70e9
+MP,	PRXY,	1,	0.32
+MP, 	KXX,	1,	250
+MP,	CTEX, 	1, 	22e-6
+R, 	1,	1  
+
+
+! -------------------------------!
+! 	BC			 !
+! -------------------------------!
+DL,132,,UY,0
+DL,130,,UX,0
+DL,134,,UX,0
+
+LSEL,ALL
+LSEL,U,,,134
+LSEL,U,,,130
+LSEL,U,,,132
+SFL,ALL,CONV,fluid_conv, ,fluid_temp,
+ALLSEL,ALL
+
+
+SFL,132,HFLUX,fluxload
+
+
+ASEL,ALL
+AATT,1,1
+ALLSEL,ALL
+
+AESIZE,ALL,eSIZE
+AMESH,ALL
+
+! -------------------------------!
+! Write CDB file		 !
+! -------------------------------!
+CDWRITE,DB,'heat_sink','cdb',,'','' 
+
+
+! -------------------------------!
+! Solve				 !
+! -------------------------------!
+
+FINISH  
+/SOL
+ANTYPE,0
+SOLVE
+FINISH
+
+
+
+! -------------------------------!
+! Post				 ! 
+! -------------------------------!
+
+/POST1
+!PLDISP,2
+PLNSOL, TEMP,, 0,1.0

@@ -1,0 +1,116 @@
+/TITLE, ANSYS
+! Created by: JP and DRE
+
+/clear,nostart  
+
+/AUX15    
+IOPTN,IGES,SMOOTH   
+IOPTN,MERGE,YES 
+IOPTN,SOLID,YES 
+IOPTN,SMALL,YES 
+IOPTN,GTOLER, DEFA  
+IGESIN,'negative_thermal','IGS','OneDrive for Business\Kurser\FEM-Heavy\'   
+FINISH
+
+! -------------------------------!
+! Intialise parameters		 !
+! -------------------------------!
+
+/PREP7
+eSIZE = 0.5
+temperaturen = 100
+
+! -------------------------------!
+! Element type			 !
+! -------------------------------!
+ET,	1,	PLANE222
+! Setting thermal structural analysis in keyopt
+KEYOPT,	1,	1,	11
+
+
+! -------------------------------!
+! Defining material properties	 !
+! -------------------------------!
+
+! MP  slides
+! Red
+MP,	EX,  	1,	1.01
+MP,	PRXY,	1,	0.3
+MP, KXX,	1,	1.1
+MP,	CTEX, 	1, 	30.5
+R, 	1,	1  
+
+! Blue
+MP,	EX,  	2,	3.5
+MP,	PRXY,	2,	0.3
+MP, KXX,	2,	1.1
+MP,	CTEX, 	2, 	1.1
+R, 	2,	1  
+
+
+!ASBA,3,4,keep,delete
+AOVLAP,3,4
+AGLUE,ALL
+
+! -------------------------------!
+! 	BC							 !
+! -------------------------------!
+DL,16,,UX,0
+DL,58,,UX,0
+
+DL,50,,UY,0
+DL,42,,UY,0
+
+DL,18,,UX,0
+DL,40,,UY,0
+
+DL,16,,TEMP,temperaturen
+DL,58,,TEMP,temperaturen
+
+DL,50,,UY,temperaturen
+DL,42,,UY,temperaturen
+
+! -------------------------------!
+! MESH atributes and mesh	 !
+! -------------------------------!
+
+ASEL,s,,,7
+ASEL,A,,,5
+ASEL,A,,,1
+ASEL,A,,,2
+ASEL,A,,,6
+AATT,1,1
+ALLSEL,ALL
+
+ASEL,s,,,9
+ASEL,A,,,11
+ASEL,A,,,8
+AATT,2,2
+ALLSEL,all
+
+AESIZE,ALL,eSIZE
+AMESH,ALL
+
+! -------------------------------!
+! Write CDB file		 !
+! -------------------------------!
+CDWRITE,DB,'negative_expand_small','cdb',,'','' 
+
+! -------------------------------!
+! Solve				 !
+! -------------------------------!
+
+FINISH  
+/SOL
+ANTYPE,0
+SOLVE
+FINISH
+
+
+
+! -------------------------------!
+! Post				 ! 
+! -------------------------------!
+
+/POST1
+PLDISP,2

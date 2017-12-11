@@ -1,0 +1,120 @@
+/TITLE, ANSYS
+! Created by: JP and DRE
+
+/clear,nostart  
+/PREP7
+
+! -------------------------------!
+! Intialise parameters		 !
+! -------------------------------!
+
+eSIZE = 0.05
+
+! -------------------------------!
+! Element type			 !
+! -------------------------------!
+ET,	1,	PLANE222
+! Setting thermal structural analysis in keyopt
+KEYOPT,	1,	1,	11
+
+! -------------------------------!
+! Defining material properties	 !
+! -------------------------------!
+MP,	EX,  	1,	1
+MP,	PRXY,	1,	0.3
+MP,	DENS,	1,	1000
+MP, 	KXX,	1,	1
+MP,	CTEX, 	1, 	1
+R, 	1,	1
+
+
+
+! -------------------------------!
+! Geometry			 !
+! -------------------------------!
+
+! Outer part
+K,1,0,0,0
+K,2,1,0,0
+K,3,1,1,0
+K,4,0,1,0
+
+A,1,2,3,4
+
+CYL4,0.5,1,0.25
+
+! Subtract Inner from Outer
+ASBA,1,2  
+
+
+! -------------------------------!
+! BC's	Before Mesh		 !
+! -------------------------------!
+
+! Structural BC on Line
+DL,4, ,UX,0 
+DL,1, ,UY,0 
+
+! Thermal BC on line
+!DL,, ,TEMP,25
+!DL,, ,TEMP,50
+
+
+! Area Body thermal load
+!BFA,	1,	HGEN,	100
+
+
+
+! -------------------------------!
+! Loads	Before Mesh		 !
+! -------------------------------!
+
+LSEL,S,,,10
+LSEL,A,,,7
+LSEL,A,,,8
+LSEL,A,,,9
+
+! SFL,line ,CONV, coeficient,,bulk temp
+SFL,ALL,CONV,25, ,500,
+ALLSEL,all
+
+SFL,2,CONV,25,, 200
+
+! -------------------------------!
+! Mesh				 !
+! -------------------------------!
+
+ALLSEL,ALL
+! Meshing
+AESIZE,all,eSIZE 
+AMESH,ALL
+
+
+
+! -------------------------------!
+! Write CDB file		 !
+! -------------------------------!
+CDWRITE,DB,'conv_test','cdb',,'','' 
+
+
+! -------------------------------!
+! Solve				 !
+! -------------------------------!
+
+FINISH  
+/SOL
+ANTYPE,0
+SOLVE
+FINISH
+
+! -------------------------------!
+! Post				 ! 
+! -------------------------------!
+
+/POST1
+PRNSOL,TEMP 
+PLNSOL, TEMP,, 1
+
+
+
+

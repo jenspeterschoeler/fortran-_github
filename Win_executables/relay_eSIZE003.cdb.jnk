@@ -1,0 +1,69 @@
+/COM,ANSYS RELEASE Release 18.1      BUILD 18.1      UP20170403       19:09:45                                          
+/NOPR                                                                                                                   
+*IF,_CDRDOFF,EQ,1,THEN     !if solid model was read in                                                                  
+_CDRDOFF=             !reset flag, numoffs already performed                                                            
+*ELSE              !offset database for the following FE model                                                          
+NUMOFF,NODE,    25695                                                                                                   
+NUMOFF,ELEM,    24722                                                                                                   
+NUMOFF,MAT ,        3                                                                                                   
+NUMOFF,REAL,        1                                                                                                   
+NUMOFF,TYPE,        1                                                                                                   
+*ENDIF                                                                                                                  
+*SET,ALPHA1  , 0.1000000000000E-04                                                                                      
+*SET,ALPHA2  , 0.1000000000000E-03                                                                                      
+*SET,ESIZE   , 0.3000000000000E-01                                                                                      
+*SET,H       ,  1.000000000000                                                                                          
+*SET,H_CONNECT,  4.000000000000                                                                                         
+*SET,TEMP1   ,  100.0000000000                                                                                          
+*SET,TEMP2   ,  0.000000000000                                                                                          
+*SET,W       ,  10.00000000000                                                                                          
+*SET,W_CONNECT, 0.3000000000000                                                                                         
+*SET,_RETURN ,  0.000000000000                                                                                          
+*SET,_STATUS ,  0.000000000000                                                                                          
+*SET,_UIQR   ,  17.00000000000                                                                                          
+DOF,DELETE                                                                                                              
+KEYOP,        1, 1,       11                                                                                            
+MPTEMP,R5.0, 1, 1,  0.00000000    ,                                                                                     
+MPTEMP,R5.0, 1, 1,  0.00000000    ,                                                                                     
+MPTEMP,R5.0, 1, 1,  0.00000000    ,                                                                                     
+MPTEMP,R5.0, 1, 1,  0.00000000    ,                                                                                     
+MPDATA,R5.0, 1,CTEX,       1, 1, 1.000000000E-05,                                                                       
+MPTEMP,R5.0, 1, 1,  0.00000000    ,                                                                                     
+MPTEMP,R5.0, 1, 1,  0.00000000    ,                                                                                     
+MPTEMP,R5.0, 1, 1,  0.00000000    ,                                                                                     
+MPTEMP,R5.0, 1, 1,  0.00000000    ,                                                                                     
+MPDATA,R5.0, 1,CTEX,       2, 1, 1.000000000E-04,                                                                       
+MPTEMP,R5.0, 1, 1,  0.00000000    ,                                                                                     
+MPTEMP,R5.0, 1, 1,  0.00000000    ,                                                                                     
+MPTEMP,R5.0, 1, 1,  0.00000000    ,                                                                                     
+MPTEMP,R5.0, 1, 1,  0.00000000    ,                                                                                     
+MPDATA,R5.0, 1,CTEX,       3, 1,  0.00000000    ,                                                                       
+EXTOPT,ATTR,      0,      0,      0                                                                                     
+EXTOPT,ESIZE,  0,  0.0000                                                                                               
+EXTOPT,ACLEAR,      0                                                                                                   
+TREF,  0.00000000                                                                                                       
+IRLF,  0                                                                                                                
+BFUNIF,TEMP,_TINY                                                                                                       
+OMEGA,  0.00000000    ,  0.00000000    ,  0.00000000                                                                    
+DOMEGA,  0.00000000    ,  0.00000000    ,  0.00000000                                                                   
+CGLOC,  0.00000000    ,  0.00000000    ,  0.00000000                                                                    
+CGOMEGA,  0.00000000    ,  0.00000000    ,  0.00000000                                                                  
+DCGOMG,  0.00000000    ,  0.00000000    ,  0.00000000                                                                   
+                                                                                                                        
+KUSE,     0                                                                                                             
+TIME,  0.00000000                                                                                                       
+ALPHAD,  0.00000000                                                                                                     
+BETAD,  0.00000000                                                                                                      
+DMPRAT,  0.00000000                                                                                                     
+DMPSTR,  0.00000000                                                                                                     
+                                                                                                                        
+                                                                                                                        
+CRPLIM, 0.100000000    ,   0                                                                                            
+CRPLIM,  0.00000000    ,   1                                                                                            
+NCNV,     1,  0.00000000    ,     0,  0.00000000    ,  0.00000000                                                       
+                                                                                                                        
+NEQIT,     0                                                                                                            
+                                                                                                                        
+ERESX,DEFA                                                                                                              
+                                                                                                                        
+/GO                                                                                                                     

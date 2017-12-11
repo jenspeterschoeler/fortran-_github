@@ -1,0 +1,81 @@
+/TITLE, CONTINUUM GROUND STRUCTURE
+! Created with:       FlExtract v1.13
+! Element type:       PLANE42
+! Number of nodes:    27
+! Number of elements: 16
+
+/PREP7
+! Element type: ET, type #, name
+ET, 1, PLANE42, , , 3
+
+! Nodal coordinates: 'N', node_id, x-coord, y-coord, z-coord
+N,	1,	0,	0,	0
+N,	2,	0,	0.5,	0
+N,	3,	0,	1,	0
+N,	4,	0.5,	0,	0
+N,	5,	0.5,	0.5,	0
+N,	6,	0.5,	1,	0
+N,	7,	1,	0,	0
+N,	8,	1,	0.5,	0
+N,	9,	1,	1,	0
+N,	10,	1.5,	0,	0
+N,	11,	1.5,	0.5,	0
+N,	12,	1.5,	1,	0
+N,	13,	2,	0,	0
+N,	14,	2,	0.5,	0
+N,	15,	2,	1,	0
+N,	16,	2.5,	0,	0
+N,	17,	2.5,	0.5,	0
+N,	18,	2.5,	1,	0
+N,	19,	3,	0,	0
+N,	20,	3,	0.5,	0
+N,	21,	3,	1,	0
+N,	22,	3.5,	0,	0
+N,	23,	3.5,	0.5,	0
+N,	24,	3.5,	1,	0
+N,	25,	4,	0,	0
+N,	26,	4,	0.5,	0
+N,	27,	4,	1,	0
+
+! Element connectivity: 'EN', element_id,  node_ids
+! Material:             'MP', property_id, material_id, value 
+! Custom property:      'R',  property_id, value 
+! Material 1
+MP,	EX,  	1,	1
+MP,	PRXY,	1,	0.3
+MP,	DENS,	1,	1000
+MP,	KXX,	1,	100
+R, 	1,	1
+! Connectivity
+EN,	1	1	4	5	2
+EN,	2	2	5	6	3
+EN,	3	4	7	8	5
+EN,	4	5	8	9	6
+EN,	5	7	10	11	8
+EN,	6	8	11	12	9
+EN,	7	10	13	14	11
+EN,	8	11	14	15	12
+EN,	9	13	16	17	14
+EN,	10	14	17	18	15
+EN,	11	16	19	20	17
+EN,	12	17	20	21	18
+EN,	13	19	22	23	20
+EN,	14	20	23	24	21
+EN,	15	22	25	26	23
+EN,	16	23	26	27	24
+
+! Nodal diplacement: 'D', node_id, 'UX / UY', value
+
+! Nodal load: 'F', node_id, 'FX / FY', value
+
+T,	1,	TEMP,	10
+T,	2,	TEMP,	10
+T,	3,	TEMP,	10
+T,	25,	TEMP,	100
+
+FINISH
+
+/SOLU
+antype, thermal
+FINISH
+

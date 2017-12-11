@@ -1,0 +1,213 @@
+/TITLE, ANSYS
+! Created by: JP and DRE
+
+/clear,nostart  
+/PREP7
+
+! -------------------------------!
+! Intialise parameters		 !
+! -------------------------------!
+
+eSIZE = 10
+temperaturen = 40
+
+! -------------------------------!
+! Element type			 !
+! -------------------------------!
+ET,	1,	PLANE222
+! Setting thermal structural analysis in keyopt
+KEYOPT,	1,	1,	11
+
+
+! -------------------------------!
+! Defining material properties	 !
+! -------------------------------!
+
+! MP from CES
+MP,	EX,  	1,	10
+MP,	PRXY,	1,	0.3
+MP,	DENS,	1,	100
+MP, 	KXX,	1,	12
+MP,	CTEX, 	1, 	1.1e3
+R, 	1,	1  
+
+MP,	EX,  	2,	20
+MP,	PRXY,	2,	0.3
+MP,	DENS,	2,	50
+MP, KXX,	2,	16
+MP,	CTEX, 	2, 	1.2
+R, 	2,	1  
+
+MP,	EX,  	3,	20
+MP,	PRXY,	3,	0.3
+MP,	DENS,	3,	50
+MP, KXX,	3,	16
+MP,	CTEX, 	3, 	1e-12
+R, 	3,	1  
+
+
+! -------------------------------!
+! Geometry			 			!
+! -------------------------------!
+
+bred = 1
+
+armhojde = 21
+armtyk = 1
+torso = 4
+
+K,1,0,armhojde+armtyk,0
+K,2,0,armhojde+armtyk/2,0
+K,3,0,armhojde,0
+
+K,4,9,armhojde+armtyk,0
+K,5,9,armhojde+armtyk/2,0
+K,6,9,armhojde,0
+
+K,7,11,armhojde+armtyk,0
+K,8,11,armhojde+armtyk/2,0
+K,9,11,armhojde,0
+
+A,1,2,5,4
+A,2,3,6,5
+A,4,5,8,7
+A,5,6,9,8
+
+DK,7,UX,0
+DK,8,UX,0
+DK,9,UX,0
+DK,7,UY,0
+DK,8,UY,0
+DK,9,UY,0
+
+K,10,11+torso,armhojde+armtyk,0
+K,11,11+torso,armhojde+armtyk/2,0
+K,12,11+torso,armhojde,0
+
+K,13,11+torso+2,armhojde+armtyk,0
+K,14,11+torso+2,armhojde+armtyk/2,0
+K,15,11+torso+2,armhojde,0
+
+K,16,11+torso+2+9,armhojde+armtyk,0
+K,17,11+torso+2+9,armhojde+armtyk/2,0
+K,18,11+torso+2+9,armhojde,0
+
+A,10,11,14,13
+A,11,12,15,14
+A,13,14,17,16
+A,14,15,18,17
+
+DK,10,UX,0
+DK,10,UX,0
+DK,11,UX,0
+DK,11,UY,0
+DK,12,UY,0
+DK,12,UY,0
+
+K,19,11,14,0
+K,20,11+armtyk/2,14,0
+K,21,11+armtyk,14,0
+
+K,22,11,14-2,0
+K,23,11+armtyk/2,14-2,0
+K,24,11+armtyk,14-2,0
+
+K,25,11,0,0
+K,26,11+armtyk/2,0,0
+K,27,11+armtyk,0,0
+
+A,19,20,23,22
+A,21,24,23,20
+A,22,23,26,25
+A,23,24,27,26
+
+DK,19,UX,0
+DK,20,UX,0
+DK,21,UX,0
+DK,19,UY,0
+DK,20,UY,0
+DK,21,UY,0
+
+
+
+K,28,11+torso-2*armtyk,14,0
+K,29,11+armtyk/2+torso-2*armtyk,14,0
+K,30,11+armtyk+torso-2*armtyk,14,0
+
+K,31,11+torso-2*armtyk,14-2,0
+K,32,11+armtyk/2+torso-2*armtyk,14-2,0
+K,33,11+armtyk+torso-2*armtyk,14-2,0
+
+K,34,11+torso-2*armtyk,0,0
+K,35,11+armtyk/2+torso-2*armtyk,0,0
+K,36,11+armtyk+torso-2*armtyk,0,0
+
+A,28,29,32,31
+A,30,33,32,29
+A,33,36,35,32
+A,32,35,34,31
+
+DK,28,UX,0
+DK,29,UX,0
+DK,30,UX,0
+DK,28,UY,0
+DK,29,UY,0
+DK,30,UY,0
+
+DK,ALL,TEMP,temperaturen
+
+! Høj
+ASEL,s,,,4
+ASEL,A,,,6
+ASEL,A,,,10
+ASEL,A,,,13
+AATT,1,1
+ALLSEL,ALL
+
+!Lav
+ASEL,s,,,3
+ASEL,A,,,5
+ASEL,A,,,9
+ASEL,A,,,14
+AATT,2,2
+ALLSEL,ALL
+
+! Ingen
+ASEL,s,,,1
+ASEL,A,,,2
+ASEL,A,,,7
+ASEL,A,,,8
+ASEL,A,,,11
+ASEL,A,,,12
+ASEL,A,,,16
+ASEL,A,,,15
+AATT,3,3
+ALLSEL,ALL
+
+AESIZE,all,esize
+AMESH,ALL
+
+
+! -------------------------------!
+! Write CDB file		 !
+! -------------------------------!
+CDWRITE,DB,'jul','cdb',,'','' 
+
+
+! -------------------------------!
+! Solve				 !
+! -------------------------------!
+
+FINISH  
+/SOL
+ANTYPE,0
+SOLVE
+FINISH
+
+
+! -------------------------------!
+! Post				 ! 
+! -------------------------------!
+
+/POST1
+PLNSOL, TEMP,, 0,1.0

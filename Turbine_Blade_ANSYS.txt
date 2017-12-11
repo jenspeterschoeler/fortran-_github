@@ -1,0 +1,199 @@
+/TITLE, ANSYS
+! Created by: JP and DRE
+
+/clear,nostart  
+/PREP7
+
+! -------------------------------!
+! Intialise parameters		 !
+! -------------------------------!
+
+eSIZE = 0.005
+innerfluid_temp = 130
+outerfluid_temp = 1400
+
+inner_conv = 500
+outer_conv = 1000
+
+! -------------------------------!
+! Element type			 !
+! -------------------------------!
+ET,	1,	PLANE222
+! Setting thermal structural analysis in keyopt
+KEYOPT,	1,	1,	11
+
+! -------------------------------!
+! Defining material properties	 !
+! -------------------------------!
+
+! MP from CES
+MP,	EX,  	1,	200e9
+MP,	PRXY,	1,	0.3
+MP,	DENS,	1,	8e3
+MP, 	KXX,	1,	12.5
+MP,	CTEX, 	1, 	13e-6
+R, 	1,	1  
+
+! Test MP
+!MP,	EX,  	1,	1
+!MP,	PRXY,	1,	0.3
+!MP,	DENS,	1,	1
+!MP, 	KXX,	1,	1e3
+!MP,	CTEX, 	1, 	1
+!R, 	1,	1  
+
+! -------------------------------!
+! Geometry			 !
+! -------------------------------!
+
+! Outer part
+K,1,0,0.2,0
+K,2,0.1,0.4,0
+K,3,0.15,0.275,0
+K,4,0.5,0.65,0
+K,5,0.5,0.35,0
+K,6,1.09,0.08,0
+K,7,1.07,0.05,0
+K,8,1.13,0,0
+
+BSPLIN,2,1,3
+BSPLIN,2,4,6
+BSPLIN,3,5,7
+BSPLIN,6,8,7
+
+AL,1,2,3,4
+
+! Inner part to subtract
+K,9,0.01,0.21,0
+K,10,0.2,0.35,0
+K,11,0.15,0.4,0
+K,12,0.5,0.45,0
+K,13,0.5,0.55,0
+K,14,0.99,0.13,0
+K,15,1.07,0.095,0
+K,16,1.1,0.04,0
+
+BSPLIN,10,9,11
+BSPLIN,10,12,14
+BSPLIN,11,13,15
+BSPLIN,14,16,15
+
+AL,5,6,7,8
+
+! Subtract Inner from Outer
+ASBA,1,2  
+
+! Inner added masses
+K,17,0.37,0.4,0
+K,18,0.41,0.4,0
+K,19,0.41,0.6,0
+K,20,0.37,0.6,0
+
+A,17,18,19,20
+
+K,21,0.72,0.3,0
+K,22,0.77,0.3,0
+K,23,0.77,0.45,0
+K,24,0.72,0.5,0
+
+A,21,22,23,24
+
+! Add areas together
+AADD,ALL  
+
+
+! -------------------------------!
+! BC's	Before Mesh		 !
+! -------------------------------!
+
+! Structural BC on Line
+DL,19, ,UX,0 
+DL,19, ,UY,0 
+
+! Thermal BC on line
+!DL,2, ,TEMP,25
+!DL,3, ,TEMP,50
+
+
+! Area Body thermal load
+!BFA,	1,	HGEN,	100
+
+
+
+! -------------------------------!
+! Loads	Before Mesh		 !
+! -------------------------------!
+
+! Outer Bound Convection
+LSEL,S,,,1
+LSEL,A,,,2
+LSEL,A,,,3
+LSEL,A,,,4
+
+! SFL,line ,CONV, coeficient,,bulk temp
+SFL,ALL,CONV,outer_conv, ,outerfluid_temp,
+ALLSEL,all
+
+! Inner 1 (left) Bound Convection
+LSEL,S,,,5
+LSEL,A,,,17
+LSEL,A,,,18
+LSEL,A,,,19
+SFL,ALL,CONV,inner_conv, ,innerfluid_temp,
+ALLSEL,all
+
+! Inner 2 (mid) Bound Convection
+LSEL,S,,,23
+LSEL,A,,,24
+LSEL,A,,,25
+LSEL,A,,,26
+SFL,ALL,CONV,inner_conv, ,innerfluid_temp,
+ALLSEL,all
+
+
+! Inner 3 (right) Bound Convection
+LSEL,S,,,8
+LSEL,A,,,20
+LSEL,A,,,21
+LSEL,A,,,22
+SFL,ALL,CONV,inner_conv, ,innerfluid_temp,	
+ALLSEL,all
+
+! -------------------------------!
+! Mesh				 !
+! -------------------------------!
+
+ALLSEL,ALL
+! Meshing
+AESIZE,all,eSIZE 
+AMESH,ALL
+
+
+
+! -------------------------------!
+! Write CDB file		 !
+! -------------------------------!
+CDWRITE,DB,'turbine_eSIZE005','cdb',,'','' 
+
+
+! -------------------------------!
+! Solve				 !
+! -------------------------------!
+
+FINISH  
+/SOL
+ANTYPE,0
+SOLVE
+FINISH
+
+! -------------------------------!
+! Post				 ! 
+! -------------------------------!
+
+/POST1
+PRNSOL,TEMP 
+PLNSOL, TEMP,, 1
+
+
+
+

@@ -1,0 +1,129 @@
+/TITLE, ANSYS
+! Created by: JP and DRE
+
+/clear,nostart  
+/PREP7
+
+! -------------------------------!
+! Intialise parameters		 !
+! -------------------------------!
+
+eSIZE = 0.1
+
+! -------------------------------!
+! Element type			 !
+! -------------------------------!
+ET,	1,	PLANE222
+! Setting thermal structural analysis in keyopt
+KEYOPT,	1,	1,	11
+
+! -------------------------------!
+! Defining material properties	 !
+! -------------------------------!
+
+! MP from CES
+MP,	EX,  	1,	10
+MP,	PRXY,	1,	0.3
+MP,	DENS,	1,	100
+MP, 	KXX,	1,	12
+MP,	CTEX, 	1, 	20e-6
+R, 	1,	1  
+
+MP,	EX,  	2,	20
+MP,	PRXY,	2,	0.3
+MP,	DENS,	2,	50
+MP, KXX,	2,	16
+MP,	CTEX, 	2, 	10e-6
+R, 	2,	1  
+
+! -------------------------------!
+! Geometry			 !
+! -------------------------------!
+
+
+K,1,0,0,0
+K,2,8,0,0
+K,3,8,1,0
+K,4,0,1,0
+
+K,5,8,2,0
+K,6,0,2,0
+
+A,1,2,3,4
+A,4,3,5,6
+
+
+
+! -------------------------------!
+! BC's	Before Mesh		 !
+! -------------------------------!
+
+! Structural BC on Line
+!DL,1, ,UY,0 
+DL,4, ,UX,0 
+DL,7, ,UX,0 
+DL,4, ,UY,0 
+DL,7, ,UY,0 
+
+! -------------------------------!
+! Loads 		Before Mesh		 !
+! -------------------------------!
+
+ASEL,S,,,1
+AATT,1,1
+ALLSEL,all
+
+ASEL,S,,,2
+AATT,2,2
+ALLSEL,all
+
+AESIZE,all,esize
+
+
+LSEL,s,,,5
+LSEL,a,,,2
+SFL,ALL,CONV,10, ,50,
+ALLSEL,all
+
+LSEL,s,,,7
+LSEL,a,,,4
+SFL,all,HFLUX,10,
+allsel,all 
+
+BFA,all,HGEN,1000
+
+
+! -------------------------------!
+! Mesh				 !
+! -------------------------------!
+
+ALLSEL,ALL
+! Meshing
+AESIZE,all,eSIZE 
+AMESH,ALL
+
+
+
+! -------------------------------!
+! Write CDB file		 !
+! -------------------------------!
+CDWRITE,DB,'multi_test','cdb',,'','' 
+
+! -------------------------------!
+! Solve				 !
+! -------------------------------!
+
+FINISH  
+/SOL
+ANTYPE,0
+SOLVE
+FINISH
+
+! -------------------------------!
+! Post				 ! 
+! -------------------------------!
+
+/POST1
+PRNSOL,TEMP 
+PLNSOL, TEMP,, 1
+

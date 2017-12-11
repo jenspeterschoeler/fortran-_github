@@ -1,0 +1,145 @@
+TITLE, ANSYS
+! Created by: JP and DRE
+
+/clear,nostart  
+/PREP7
+
+r1 = 300
+r2 = 360
+r3 = 400
+
+! -------------------------------!
+! Intialise parameters		 !
+! -------------------------------!
+
+eSIZE = 10
+
+! -------------------------------!
+! Element type			 !
+! -------------------------------!
+ET,	1,	PLANE222
+! Setting thermal structural analysis in keyopt
+KEYOPT,	1,	1,	11
+
+! -------------------------------!
+! Defining material properties	 !
+! -------------------------------!
+
+! MP from CES
+! waste
+MP,	EX,  	1,	1
+MP,	PRXY,	1,	1e-6
+MP, 	KXX,	1,	200
+MP,	CTEX, 	1, 	28.9e-3
+R, 	1,	1  
+
+! bly
+MP,	EX,  	2,	16e3
+MP,	PRXY,	2,	0.44
+MP, 	KXX,	2,	35.3
+MP,	CTEX, 	2, 	28.9e-3
+ 
+! stål
+MP,	EX,  	3,	210e3
+MP,	PRXY,	3,	0.3
+MP, 	KXX,	3,	15.1
+MP,	CTEX, 	3, 	12e-3
+
+! -------------------------------!
+! Geometry			 !
+! -------------------------------!
+
+CYL4,	r3,r3,r1
+CYL4,	r3,r3,r2
+CYL4,	r3,r3,r3
+ 
+
+ASBA,       3,       2 
+CYL4,	r3,r3,r2
+ASBA,       2,       1 
+CYL4,	r3,r3,r1
+
+AGLUE,1,3,4
+
+! -------------------------------!
+! BC's	Before Mesh		 !
+! -------------------------------!
+
+LSEL,S,,,9
+LSEL,A,,,10
+LSEL,A,,,11
+LSEL,A,,,12
+SFL,ALL,CONV,500, ,10,
+ALLSEL,ALL
+
+KSEL,S,,,11
+KSEL,A,,,15
+KSEL,A,,,19
+KSEL,A,,,17
+KSEL,A,,,13
+KSEL,A,,,9
+DK,all,UY,0
+
+KSEL,S,,,10
+KSEL,A,,,14
+KSEL,A,,,18
+KSEL,A,,,20
+KSEL,A,,,16
+KSEL,A,,,12
+DK,all,UX,0
+ALLSEL,ALL
+
+
+! -------------------------------!
+! Mesh				 !
+! -------------------------------!
+
+! Indre (Waste)
+ASEL,S,,,1
+AATT,1,1
+ALLSEL,ALL
+
+! Mellem (Bly) 
+ASEL,S,,,5
+AATT,2,2
+ALLSEL,ALL
+
+! Stor (Stål) 
+ASEL,S,,,2
+AATT,3,3
+ALLSEL,ALL
+
+! Meshing
+ASEL,ALL
+AESIZE,all,eSIZE 
+AMESH,ALL
+
+! LOAD after mesh
+ASEL,S,,,1
+ESLA,R
+SFE,ALL,3,PRES,0,10
+ALLSEL,ALL
+
+! -------------------------------!
+! Write CDB file		 !
+! -------------------------------!
+CDWRITE,DB,'radio_eSIZE10','cdb',,'','' 
+
+! -------------------------------!
+! Solve				 !
+! -------------------------------!
+
+FINISH  
+/SOL
+ANTYPE,0
+SOLVE
+FINISH
+
+! -------------------------------!
+! Post				 ! 
+! -------------------------------!
+
+/POST1
+PRNSOL,TEMP 
+PLNSOL, TEMP,, 0
+
